@@ -21,8 +21,9 @@ class Token < ApplicationRecord
     Time.current > expires_in
   end
 
-  def valid?
-    Time.current < expires_in
+  def active?
+    return false if expired?
+    true
   end
 
 end

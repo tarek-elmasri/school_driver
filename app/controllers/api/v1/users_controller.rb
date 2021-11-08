@@ -13,7 +13,7 @@ class Api::V1::UsersController < ApplicationController
           render json: {token: {code: token.code}}
         else
           # check sms errors
-          render json: {errors: {message: "sms_service_unavailable"}},status: :forbidden
+          render json: {errors: {message: I18n.t("sms_service_unavailable")}},status: :forbidden
         end
       end
 
@@ -35,7 +35,7 @@ class Api::V1::UsersController < ApplicationController
 
       def validate_user_params
         @user = User.new(new_user_params)
-        render json: {errors: @user.errors },statud: :forbidden unless @user.valid?
+        render json: {errors: @user.errors },status: :forbidden unless @user.valid?
       end
 
 

@@ -1,5 +1,9 @@
+require "jwt_handler"
 class User < ApplicationRecord
+  require "jwt_handler"
+  include JWT_Handler::AuthTokens
 
+  attr_accessor :refresh_token
   has_secure_password
 
   has_one :parent

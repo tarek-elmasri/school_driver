@@ -16,20 +16,20 @@ ActiveRecord::Schema.define(version: 2021_11_05_214204) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "drivers", force: :cascade do |t|
+  create_table "drivers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.datetime "dob", null: false
-    t.bigint "user_id", null: false
+    t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_drivers_on_user_id"
   end
 
-  create_table "parents", force: :cascade do |t|
+  create_table "parents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "first_name", null: false
     t.string "last_name", null: false
-    t.bigint "user_id", null: false
+    t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_parents_on_user_id"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 2021_11_05_214204) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", null: false
     t.string "phone_no", null: false
     t.string "password_digest"

@@ -39,5 +39,10 @@ module SchoolDriver
 
     # Autoload path
     #config.autoload_paths += %W(#{config.root}/lib)
+
+    #using defualt uuid instead of bigint
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+    end
   end
 end
