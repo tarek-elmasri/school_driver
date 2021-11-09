@@ -4,11 +4,11 @@ class Api::V1::UsersController < ApplicationController
 
 
       def new
-        token = Token.where(phone_no: @user.phone_no).first_or_initialize
+        token = Token.where(phone_no: Current.user.phone_no).first_or_initialize
         return render json: {token: {code: token.code}}  unless token.exceed_intervals?
         token.regenerate! expires_in: 2.minutes.from_now
         require 'sms_service'
-        response = SMS_Service.send phone_no: @user.phone_no, otp: token.otp
+        response = SMS_Service.send phone_no: Current.user.phone_no, otp: token.otp
         if response.status == 200
           render json: {token: {code: token.code}}
         else
@@ -19,8 +19,8 @@ class Api::V1::UsersController < ApplicationController
 
 
       def create
-        @user.save
-        render json: {user: {access_token: @user.access_token , refresh_token: @user.refresh_token} }
+        Current.user.save
+        render json: {user: {access_token: Current.user.access_token , refresh_token: Current.user.refresh_token} }
       end
 
 
@@ -34,8 +34,8 @@ class Api::V1::UsersController < ApplicationController
       end
 
       def validate_user_params
-        @user = User.new(new_user_params)
-        render json: {errors: @user.errors },status: :forbidden unless @user.valid?
+        Current.user = User.new(new_user_params)
+        render json: {errors: Current.user.errors },status: :forbidden unless Current.user.valid?
       end
 
 

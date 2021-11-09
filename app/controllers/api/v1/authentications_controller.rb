@@ -21,7 +21,7 @@ class Api::V1::AuthenticationsController < ApplicationController
   end
 
   def validate_credentials
-    @user = User.auth(user_params)
-    render json: {errors: I18n.t("invalid_credentials")},status: :unauthorized unless @user.present?
+    Current.user = User.auth(user_params)
+    render json: {errors: I18n.t("invalid_credentials")},status: :unauthorized unless Current.user.present?
   end
 end
