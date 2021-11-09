@@ -10,7 +10,7 @@ module JWT_Handler
     payload[:iss] = JWT_Handler::DEFUALT_ISSUER
     #payload[:sub]= data[:purpose] || "TEMP"
 
-    headers = JWT_::HEADERS
+    headers = JWT_Handler::HEADERS
     if data[:headers].present?
       data[:headers].map {|k,v| headers[k] = v}
     end
