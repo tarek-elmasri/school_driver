@@ -104,9 +104,9 @@ GEM
     msgpack (1.4.2)
     multipart-post (2.1.1)
     nio4r (2.5.8)
-    nokogiri (1.12.5-x64-mingw32)
+    nokogiri (1.12.5-x86_64-linux)
       racc (~> 1.4)
-    pg (1.2.3-x64-mingw32)
+    pg (1.2.3)
     puma (5.5.2)
       nio4r (~> 2.0)
     racc (1.6.0)
@@ -153,8 +153,6 @@ GEM
     thor (1.1.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2021.5)
-      tzinfo (>= 1.0.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -162,6 +160,7 @@ GEM
 
 PLATFORMS
   x64-mingw32
+  x86_64-linux
 
 DEPENDENCIES
   bcrypt (~> 3.1.7)
@@ -179,4 +178,4 @@ RUBY VERSION
    ruby 2.6.6p146
 
 BUNDLED WITH
-   2.2.15
+   2.2.30
