@@ -9,10 +9,22 @@ class Api::V1::UsersController < ApplicationController
 
       def create
         token= Token.find_by(token_params, phone_no: Current.user.phone_no)
-        return render json: {errors: {token: I18n.t("invalid_token")}},status: :unauthorized unless token&.active?
+
+        return render json: {
+          errors: {token: I18n.t("invalid_token")}
+          },status: :unauthorized unless token&.active?
         
         Current.user.save
-        render json: {user: {access_token: Current.user.generate_access_token , refresh_token: Current.user.refresh_token} }
+
+        render json: {
+          user: {
+            data: "user data",
+          },
+          token: {
+            access_token: Current.user.generate_access_token , 
+            refresh_token: Current.user.refresh_token
+            } 
+          }
       end
 
 
@@ -31,7 +43,7 @@ class Api::V1::UsersController < ApplicationController
 
       def set_user
         Current.user = User.new(new_user_params)
-        render json: {errors: Current.user.errors },status: 400 unless Current.user.valid?
+        render json: {errors: Current.user.errors },status: 422 unless Current.user.valid?
       end
 
 

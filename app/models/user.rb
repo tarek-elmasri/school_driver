@@ -24,10 +24,10 @@ class User < ApplicationRecord
   
   validate :type_specified
 
-  scope :auth, lambda {|credentials|
+  def self.auth(credentials)
     find_by(phone_no: credentials[:phone_no])
-    &.authenticate(credentials[:password])
-  }
+    &.authenticate credentials[:password]
+  end
 
   private
   def type_specified
