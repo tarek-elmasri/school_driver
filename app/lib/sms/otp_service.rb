@@ -25,7 +25,7 @@ class Sms::OtpService
     server_response = send_otp(token.otp)
     response = JSON.parse(server_response.body)
     puts response["code"]
-    if response[:code] == "1"
+    if response["code"] == "1"
       return {token: {code: token.code}}
     else
       # check sms errors
