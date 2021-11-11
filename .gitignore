@@ -28,3 +28,4 @@
 
 /config/local_env.yml
 .ruby-version
+/config/credentials.yml.enc
