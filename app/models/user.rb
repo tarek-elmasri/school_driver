@@ -1,6 +1,5 @@
-require "jwt_handler"
+require "jwt_modules/auth_tokens"
 class User < ApplicationRecord
-  require "jwt_handler"
   include JWT_Handler::AuthTokens
 
   has_secure_password

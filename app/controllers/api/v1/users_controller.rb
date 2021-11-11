@@ -12,7 +12,7 @@ class Api::V1::UsersController < ApplicationController
 
         return render json: {
           errors: {token: I18n.t("invalid_token")}
-          },status: :unauthorized unless token&.active?
+          },status: :unauthorized unless token#&.active?
         
         Current.user.save
 
