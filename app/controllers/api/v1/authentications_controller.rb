@@ -2,33 +2,32 @@ class Api::V1::AuthenticationsController < ApplicationController
   before_action :validate_credentials , only: [:new,:create]
 
   def new
-    puts Current.user
     response = Sms::OtpService.new(Current.user.phone_no).call
-    return render json: response
+    render json: response
   end
 
   def create
     token= Token.find_by(token_params, phone_no: Current.user.phone_no)
-    return render json: {
-      errors: {token: I18n.t("invalid_token")}
-      },status: :unauthorized unless token&.active?
-    
-    # reset refresh token forces any other device to be logged off
-    Current.user.reset_refresh_token
-
-    render json: {
-      user: {
-        data: "user data"
-      },
-      token: {
-        access_token: Current.user.generate_access_token , 
-        refresh_token: Current.user.refresh_token
-        } 
-      }
+    if token&.active?
+      # reset refresh token forces any other device to be logged off
+      Current.user.reset_refresh_token
+      render json: user_data
+    else
+      render json: {
+        errors: {errors: I18n.t("invalid_token")}
+        },status: :unauthorized
+    end
   end
 
   def refresh
-    
+    require "jwt_modules/decoder"
+    token = JWT_Handler::Decoder.new(refresh_token_params[:refresh_token])
+    if token.valid? :type => :REFRESH_TOKEN
+      Current.user = User.find(token.payload[:id])
+      render json: user_data
+    else
+      render json: { errors: "invalid_refresh_token"},status: :unauthorized
+    end
   end
 
   private
@@ -40,9 +39,23 @@ class Api::V1::AuthenticationsController < ApplicationController
     params.require(:token).permit(:code,:otp)
   end
 
+  def refresh_token_params
+    params.permit(:refresh_token)
+  end
+
   def validate_credentials
     Current.user = User.auth(user_params)
-    puts Current.user
     render json: {errors: I18n.t("invalid_credentials")},status: :unauthorized unless Current.user.present?
   end
+
+  def user_data
+    {
+      user: {
+        data: "user data"
+      },
+      token: {
+        access_token: Current.user.generate_access_token , 
+        refresh_token: Current.user.refresh_token
+        } 
+    }
 end

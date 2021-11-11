@@ -1,16 +1,18 @@
 class ApplicationController < ActionController::API
-    #before_action :authenticate_user
 
     protected
     def authenticate_user
-        require "jwt_modules/jwt_handler"
-        token = request.headers[:Authorization]
+        require "jwt_modules/decoder"
+        access_token = request.headers[:Authorization]
                         &.split('Bearer ')
                         &.last
 
-        token_data = JWT_Handler.decode token
+        token = JWT_Handler::Decoder.new access_token
         
-        render json: token_data
-
+        if token.valid? :type => :ACCESS_TOKEN
+            Current.user = User.find(token.payload[:id])
+        else
+            render json: {error: I18n.t(:invalid_access_token)},status: :unauthorized
+        end
     end
 end
