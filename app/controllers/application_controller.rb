@@ -6,9 +6,7 @@ class ApplicationController < ActionController::API
         access_token = request.headers[:Authorization]
                         &.split('Bearer ')
                         &.last
-
         token = JWT_Handler::Decoder.new access_token
-        
         if token.valid? :type => :ACCESS_TOKEN
             Current.user = User.find(token.payload[:id])
         else

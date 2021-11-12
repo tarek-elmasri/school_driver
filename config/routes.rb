@@ -8,11 +8,11 @@ Rails.application.routes.draw do
           post "/" => "users#create"
         end
 
-         scope :auth do
+        scope :auth do
           post 'new' => "authentications#new"
           post '/' => "authentications#create"
           post 'refresh' => "authentications#refresh"
-         end
+        end
       end
     end
 

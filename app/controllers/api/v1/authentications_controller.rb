@@ -21,9 +21,10 @@ class Api::V1::AuthenticationsController < ApplicationController
 
   def refresh
     require "jwt_modules/decoder"
-    token = JWT_Handler::Decoder.new(refresh_token_params[:refresh_token])
-    if token.valid? :type => :REFRESH_TOKEN
-      Current.user = User.find(token.payload[:id])
+    decoder = JWT_Handler::Decoder.new(refresh_token_params[:refresh_token])
+    user = User.find_by(refresh_token: decoder.token)
+    
+    if user.present? && decoder.valid?(:type => :REFRESH_TOKEN)
       render json: user_data
     else
       render json: { errors: "invalid_refresh_token"},status: :unauthorized
@@ -56,6 +57,7 @@ class Api::V1::AuthenticationsController < ApplicationController
       token: {
         access_token: Current.user.generate_access_token , 
         refresh_token: Current.user.refresh_token
-        } 
+      } 
     }
+  end
 end
