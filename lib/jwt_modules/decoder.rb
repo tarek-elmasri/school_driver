@@ -14,11 +14,11 @@ module JWT_Handler
 
     def valid? options= {}
       data = JWT_Handler.decode token
-      self.payload = data.first
-      self.headers = data.last
+      self.payload = data.first.symbolize_keys
+      self.headers = data.last.symbolize_keys
       
       if options[:type].present?
-        return false unless options[:type] == headers["type"].to_sym
+        return false unless options[:type] == headers[:type].to_sym
       end
 
       true
