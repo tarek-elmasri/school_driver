@@ -13,9 +13,7 @@ class Api::V1::AuthenticationsController < ApplicationController
       Current.user.reset_refresh_token
       render json: user_data
     else
-      render json: {
-        errors: {errors: I18n.t("invalid_token")}
-        },status: :unauthorized
+      render json: errors_msg(:invalid_token), status: :unauthorized
     end
   end
 
@@ -23,11 +21,11 @@ class Api::V1::AuthenticationsController < ApplicationController
     require "jwt_modules/decoder"
     decoder = JWT_Handler::Decoder.new(refresh_token_params[:refresh_token])
     user = User.find_by(refresh_token: decoder.token)
-    
+
     if user.present? && decoder.valid?(:type => :REFRESH_TOKEN)
-      render json: user_data
+      render json: {:access_token => user.generate_access_token }
     else
-      render json: { errors: "invalid_refresh_token"},status: :unauthorized
+      render json: errors_msg(:invalid_refresh_token) , status: :unauthorized
     end
   end
 
@@ -46,13 +44,13 @@ class Api::V1::AuthenticationsController < ApplicationController
 
   def validate_credentials
     Current.user = User.auth(user_params)
-    render json: {errors: I18n.t("invalid_credentials")},status: :unauthorized unless Current.user.present?
+    render json: errors_msg(:invalid_credentials), status: :unauthorized unless Current.user.present?
   end
 
   def user_data
     {
       user: {
-        data: "user data"
+        user: Current.user
       },
       token: {
         access_token: Current.user.generate_access_token , 

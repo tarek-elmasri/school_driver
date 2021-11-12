@@ -14,18 +14,14 @@ class Api::V1::UsersController < ApplicationController
           Current.user.save
   
           render json: {
-            user: {
-              data: "user data",
-            },
+            user: Current.user ,
             token: {
               access_token: Current.user.generate_access_token , 
               refresh_token: Current.user.refresh_token
               } 
             }
         else
-          render json: {
-            errors: {token: I18n.t("invalid_token")}
-            },status: :unauthorized 
+          render json:errors_msg(:invalid_token), status: :unauthorized 
         end
         
       end

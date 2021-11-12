@@ -41,3 +41,4 @@ en:
   sms_service_unavailable: "SMS Service is unavailable at the moment. Please try later."
   invalid_credentials: "Invalid Phone No. or Password."
   invalid_access_token: "Invalid access token"
+  invalid_refresh_token: "Invalid refresh token."
