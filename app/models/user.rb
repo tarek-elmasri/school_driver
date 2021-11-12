@@ -21,7 +21,8 @@ class User < ApplicationRecord
 
   validates :phone_no,
         length: {minimum: 12, maximum: 12 , message: I18n.t(:invalid_phone_no)},
-        numericality: {only_integer: true, message: I18n.t(:invalid_phone_no)}
+        numericality: {only_integer: true, message: I18n.t(:invalid_phone_no)},
+        uniqueness: {message: I18n.t(:phone_already_exists)}
   
   validate :type_specified
 
