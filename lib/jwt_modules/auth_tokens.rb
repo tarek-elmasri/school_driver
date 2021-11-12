@@ -25,7 +25,7 @@ module JWT_Handler
 
 
         def reset_refresh_token
-        update :refresh_token => self.generate_refresh_token
+        update_attribute :refresh_token , generate_refresh_token
         end
 
         def generate_refresh_token

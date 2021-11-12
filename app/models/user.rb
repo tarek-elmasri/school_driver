@@ -24,7 +24,7 @@ class User < ApplicationRecord
         numericality: {only_integer: true, message: I18n.t(:invalid_phone_no)},
         uniqueness: {message: I18n.t(:phone_already_exists)}
   
-  validate :type_specified
+  validate :type_specified 
 
   def self.auth(credentials)
     find_by(phone_no: credentials[:phone_no])
