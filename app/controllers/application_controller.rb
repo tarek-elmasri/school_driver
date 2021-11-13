@@ -1,14 +1,10 @@
 class ApplicationController < ActionController::API
+    before_action {Current.fetch_token request}
 
     protected
     def authenticate_user
-        require "jwt_modules/decoder"
-        access_token = request.headers[:Authorization]
-                        &.split('Bearer ')
-                        &.last
-        token = JWT_Handler::Decoder.new access_token
-        if token.valid? :type => :ACCESS_TOKEN
-            Current.user = User.find(token.payload[:id])
+        if Current.token.valid? :type => :ACCESS_TOKEN
+            Current.user = User.find(Current.token.payload[:id])
         else
             render json: errors_msg(:invalid_access_token),status: :unauthorized
         end

@@ -12,7 +12,6 @@ class Token < ApplicationRecord
 
   def exceed_intervals?
     return true if self.updated_at.nil?
-    puts (Time.current - self.updated_at)
     (Time.current - self.updated_at) > 30
     
   end

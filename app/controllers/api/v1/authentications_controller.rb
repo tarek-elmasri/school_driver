@@ -9,7 +9,6 @@ class Api::V1::AuthenticationsController < ApplicationController
   def create
     token= Token.find_by(token_params, phone_no: Current.user.phone_no)
     if token&.active?
-      # reset refresh token forces any other device to be logged off
       Current.user.reset_refresh_token
       render json: user_data
     else
