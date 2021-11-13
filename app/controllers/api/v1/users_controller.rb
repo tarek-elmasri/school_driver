@@ -9,19 +9,11 @@ class Api::V1::UsersController < ApplicationController
 
       def create
         token= Token.find_by(token_params, phone_no: Current.user.phone_no)
-
         if token&.active?
           Current.user.save
-  
-          render json: {
-            user: Current.user ,
-            token: {
-              access_token: Current.user.generate_access_token , 
-              refresh_token: Current.user.refresh_token
-              } 
-            }
+          return render json: Current.user.tokens
         else
-          render json:errors_msg(:invalid_token), status: :unauthorized 
+          return un_authorized(:invalid_token)
         end
         
       end

@@ -43,6 +43,14 @@ class User < ApplicationRecord
     driver.present?
   end
 
+  def tokens 
+    { :tokens => {
+      :access_token => generate_access_token,
+      :refresh_token => refresh_token
+      }
+    }
+  end 
+
   private
   def type_specified
     errors.add(:type, I18n.t(:unspecified_user_type)) if (parent.nil? && driver.nil?)

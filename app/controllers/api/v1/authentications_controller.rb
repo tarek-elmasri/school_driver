@@ -3,28 +3,29 @@ class Api::V1::AuthenticationsController < ApplicationController
 
   def new
     response = Sms::OtpService.new(Current.user.phone_no).call
-    render json: response
+    return render json: response
   end
 
   def create
     token= Token.find_by(token_params, phone_no: Current.user.phone_no)
     if token&.active?
       Current.user.reset_refresh_token
-      render json: user_data
+      return render json: Current.user.tokens
     else
-      render json: errors_msg(:invalid_token), status: :unauthorized
+      return un_authorized(:invalid_token)
     end
   end
 
   def refresh
     require "jwt_modules/decoder"
     decoder = JWT_Handler::Decoder.new(refresh_token_params[:refresh_token])
-    user = User.find_by(refresh_token: decoder.token)
+    return un_authorized(:invalid_refresh_token) unless decoder.valid?(:type => :REFRESH_TOKEN)
 
-    if user.present? && decoder.valid?(:type => :REFRESH_TOKEN)
-      render json: {:access_token => user.generate_access_token }
+    user = User.find_by(refresh_token: decoder.token)
+    if user.present?
+      return render json: user.tokens
     else
-      render json: errors_msg(:invalid_refresh_token) , status: :unauthorized
+      return un_authorized(:invalid_refresh_token)
     end
   end
 
@@ -43,18 +44,7 @@ class Api::V1::AuthenticationsController < ApplicationController
 
   def validate_credentials
     Current.user = User.auth(user_params)
-    render json: errors_msg(:invalid_credentials), status: :unauthorized unless Current.user.present?
+    return un_authorized(:invalid_credentials) unless Current.user.present?
   end
 
-  def user_data
-    {
-      user: {
-        user: Current.user
-      },
-      token: {
-        access_token: Current.user.generate_access_token , 
-        refresh_token: Current.user.refresh_token
-      } 
-    }
-  end
 end

@@ -6,11 +6,12 @@ class ApplicationController < ActionController::API
         if Current.token.valid? :type => :ACCESS_TOKEN
             Current.user = User.find(Current.token.payload[:id])
         else
-            render json: errors_msg(:invalid_access_token),status: :unauthorized
+            return un_authorized(:invalid_access_token)
         end
     end
 
-    def errors_msg msg 
-        { :errors => I18n.t(msg)}
+    def un_authorized msg 
+        render json: {:errors => I18n.t(msg)}, status: :unauthorized
     end
+
 end
