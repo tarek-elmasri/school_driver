@@ -13,7 +13,9 @@ module JWT_Handler
       def generate_refresh_token
         JWT_Handler.encode payload: generate_payload(model.refresh_token_fields) , 
                             expires_in: 1.year.from_now , 
-                            headers: {type: :REFRESH_TOKEN }
+                            headers: {
+                              type: :REFRESH_TOKEN,
+                            }
       end
 
             

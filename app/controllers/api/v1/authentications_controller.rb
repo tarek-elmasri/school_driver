@@ -1,6 +1,6 @@
 class Api::V1::AuthenticationsController < ApplicationController
   before_action :validate_credentials , only: [:new,:create]
-
+  before_action :authenticate_user , only: [:test]
   def new
     response = Sms::OtpService.new(Current.user.phone_no).call
     return render json: response
@@ -9,7 +9,6 @@ class Api::V1::AuthenticationsController < ApplicationController
   def create
     token= Token.find_by(token_params, phone_no: Current.user.phone_no)
     if token&.active?
-      Current.user.reset_refresh_token
       return render json: Current.user.tokens
     else
       return un_authorized(:invalid_token)
@@ -22,11 +21,15 @@ class Api::V1::AuthenticationsController < ApplicationController
     return un_authorized(:invalid_refresh_token) unless decoder.valid?(:type => :REFRESH_TOKEN)
 
     user = User.find_by(refresh_token: decoder.token)
-    if user.present?
+    if user
       return render json: user.tokens
     else
       return un_authorized(:invalid_refresh_token)
     end
+  end
+
+  def test
+    render json: {test:"reachable"}
   end
 
   private

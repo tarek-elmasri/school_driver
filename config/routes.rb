@@ -12,6 +12,7 @@ Rails.application.routes.draw do
           post 'new' => "authentications#new"
           post '/' => "authentications#create"
           post 'refresh' => "authentications#refresh"
+          get 'test' => 'authentications#test'
         end
       end
     end

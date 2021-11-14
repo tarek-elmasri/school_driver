@@ -21,6 +21,10 @@ module JWT_Handler
         return false unless options[:type] == headers[:type].to_sym
       end
 
+      if options[:version].present?
+        return false unless options[:version] == headers[:version].to_i
+      end
+
       true
       rescue
         return false
