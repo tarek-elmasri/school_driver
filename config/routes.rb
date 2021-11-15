@@ -14,6 +14,10 @@ Rails.application.routes.draw do
           post 'refresh' => "authentications#refresh"
           get 'test' => 'authentications#test'
         end
+
+        scope :parents do
+          patch '/:id' => "parents#update"
+        end
       end
     end
 

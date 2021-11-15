@@ -43,3 +43,4 @@ en:
   invalid_access_token: "Invalid access token"
   invalid_refresh_token: "Invalid refresh token."
   phone_already_exists: "Phone No. already exists."
+  un_authorized: "Unauthorized request."

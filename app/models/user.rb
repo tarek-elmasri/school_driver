@@ -51,6 +51,17 @@ class User < ApplicationRecord
     }
   end 
 
+
+  def have_authorization? authorization 
+    true
+  end
+
+  def is_authorized_for?(authorization , model )
+
+    id == model.user.id || have_authorization?(authorization)
+
+  end
+
   private
   def type_specified
     errors.add(:type, I18n.t(:unspecified_user_type)) if (parent.nil? && driver.nil?)
