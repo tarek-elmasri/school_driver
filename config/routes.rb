@@ -6,13 +6,13 @@ Rails.application.routes.draw do
         scope :users do
           post "new" => "users#new"
           post "/" => "users#create"
+          get 'me' => "users#me"
         end
 
         scope :auth do
           post 'new' => "authentications#new"
           post '/' => "authentications#create"
           post 'refresh' => "authentications#refresh"
-          get 'test' => 'authentications#test'
         end
 
         scope :parents do

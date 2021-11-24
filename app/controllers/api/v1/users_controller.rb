@@ -1,5 +1,10 @@
 class Api::V1::UsersController < ApplicationController
       before_action :set_user , only: [:new, :create]
+      before_action :authenticate_user, only: [:me]
+      
+      def me 
+        return render json: Current.user
+      end
 
       def new
         response = Sms::OtpService.new(Current.user.phone_no).call

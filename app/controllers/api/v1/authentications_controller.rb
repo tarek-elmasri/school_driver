@@ -1,6 +1,8 @@
 class Api::V1::AuthenticationsController < ApplicationController
+  require "jwt_modules/decoder"
+
   before_action :validate_credentials , only: [:new,:create]
-  before_action :authenticate_user , only: [:test]
+
   def new
     response = Sms::OtpService.new(Current.user.phone_no).call
     return render json: response
@@ -16,7 +18,6 @@ class Api::V1::AuthenticationsController < ApplicationController
   end
 
   def refresh
-    require "jwt_modules/decoder"
     decoder = JWT_Handler::Decoder.new(refresh_token_params[:refresh_token])
     return un_authorized(:invalid_refresh_token) unless decoder.valid?(:type => :REFRESH_TOKEN)
 
@@ -26,10 +27,6 @@ class Api::V1::AuthenticationsController < ApplicationController
     else
       return un_authorized(:invalid_refresh_token)
     end
-  end
-
-  def test
-    render json: {test:"reachable"}
   end
 
   private
