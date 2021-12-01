@@ -5,3 +5,6 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+# adding school
+School.create(e_name: "Al-Alson International School" , a_name:"مداري الألسن العالمية", lat: "24.654583", long: "46.703111")

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  a_name: MyString
+  e_name: MyString
+  x: MyString
+  'y': MyString
+
+two:
+  a_name: MyString
+  e_name: MyString
+  x: MyString
+  'y': MyString
