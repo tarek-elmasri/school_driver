@@ -5,8 +5,8 @@ class CreateChildren < ActiveRecord::Migration[6.1]
       t.string :name , null:false
       t.string :age, null: false
       t.string :sex
-      t.string :class
-      t.string :grade
+      t.string :school_class
+      t.string :school_grade
       t.belongs_to :school, null: false, foreign_key: true, type: :uuid
 
       t.timestamps

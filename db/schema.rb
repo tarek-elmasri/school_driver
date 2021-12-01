@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 2021_12_01_120507) do
     t.string "name", null: false
     t.string "age", null: false
     t.string "sex"
-    t.string "class"
-    t.string "grade"
+    t.string "school_class"
+    t.string "school_grade"
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
