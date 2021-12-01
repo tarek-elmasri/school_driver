@@ -18,6 +18,14 @@ Rails.application.routes.draw do
         scope :parents do
           patch '/:id' => "parents#update"
         end
+
+        scope :schools do
+          get '/' => "schools#index"
+        end
+
+        scope :children do
+          post '/' => "children#create"
+        end
       end
     end
 

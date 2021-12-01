@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
       before_action :authenticate_user, only: [:me]
       
       def me 
-        return render json: Current.user
+        return render json: Current.user, include: ['parent.children', 'parent.children.school']
       end
 
       def new

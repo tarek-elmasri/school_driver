@@ -1,3 +1,7 @@
 class ParentSerializer < ActiveModel::Serializer
-  attributes :first_name, :last_name
+  attributes :id, :first_name, :last_name
+  has_many :children
+
+
+  
 end

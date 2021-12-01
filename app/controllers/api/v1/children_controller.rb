@@ -25,14 +25,19 @@ class Api::V1::ChildrenController < ApplicationController
 
 
   def destroy
+    child = Child.find_by(id: params[:child][:id])
+    if child && authorized_request_for(:delete_child , child.parent)
+      child.destroy
+    else
 
+    end
   end
 
 
   private
   def child_params
     params.require(:child).permit(
-      :name, :age,:sex,:class,:grade,:school_id,:parent_id
+      :name, :age,:sex,:school_class,:school_grade,:school_id,:parent_id
     )
   end
 
