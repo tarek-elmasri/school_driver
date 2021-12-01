@@ -30,7 +30,4 @@ class Api::V1::ParentsController < ApplicationController
     params.require(:parent).permit(:first_name,:last_name)
   end
 
-  def authorized_request_for authorization_type , instance 
-    Current.user.is_authorized_for? authorization_type, instance
-  end
 end

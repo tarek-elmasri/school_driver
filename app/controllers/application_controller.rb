@@ -18,4 +18,8 @@ class ApplicationController < ActionController::API
         render json: {:errors => I18n.t(msg)}, status: :unauthorized
     end
 
+    def authorized_request_for authorization_type , instance 
+        Current.user.is_authorized_for? authorization_type, instance
+    end
+
 end
