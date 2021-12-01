@@ -4,7 +4,7 @@ class Api::V1::ParentsController < ApplicationController
 
   def update
     parent = Parent.find_by(id: params[:id])
-    return un_authorized(:unauthorized) unless parent && authorized_request_for(:update_parent , parent)
+    return un_authorized(:un_authorized) unless parent && authorized_request_for(:update_parent , parent)
 
     if parent.update(parent_params)
       return render json: parent

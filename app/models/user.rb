@@ -53,7 +53,7 @@ class User < ApplicationRecord
 
 
   def have_authorization? authorization 
-    true
+    false
   end
 
   def is_authorized_for?(authorization , model=nil )
