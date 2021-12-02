@@ -3,20 +3,20 @@ class Api::V1::UsersController < ApplicationController
       before_action :authenticate_user, only: [:me]
       
       def me 
-        return render json: Current.user, include: ['parent.children', 'parent.children.school']
+        render json: Current.user, include: ['parent.children', 'parent.children.school']
       end
 
       def new
-        response = Sms::OtpService.new(Current.user.phone_no).call
-        return render json: response
+        response = Sms::OtpService.new(@user.phone_no).call
+        render json: response
       end
 
 
       def create
-        token= Token.find_by(token_params, phone_no: Current.user.phone_no)
+        token= Token.find_by(token_params, phone_no: @user.phone_no)
         if token&.active?
-          Current.user.save
-          return render json: Current.user.tokens
+          @user.save
+          render json: @user.tokens
         else
           return un_authorized(:invalid_token)
         end
@@ -38,8 +38,8 @@ class Api::V1::UsersController < ApplicationController
       end
 
       def set_user
-        Current.user = User.new(new_user_params)
-        render json: {errors: Current.user.errors },status: 422 unless Current.user.valid?
+        @user = User.new(new_user_params)
+        return invalid_params(@user.errors) unless @user.valid?
       end
 
 

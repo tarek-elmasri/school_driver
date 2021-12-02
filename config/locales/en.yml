@@ -44,3 +44,6 @@ en:
   invalid_refresh_token: "invalid_refresh_token"
   phone_already_exists: "Phone No. already exists."
   un_authorized: "Unauthorized request."
+  invalid_parent_id: "Invalid parent id."
+  invalid_child_id: "Invalid child id."
+  invalid_school_id: "Invalid school id."

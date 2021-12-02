@@ -5,13 +5,13 @@ class Api::V1::AuthenticationsController < ApplicationController
 
   def new
     response = Sms::OtpService.new(Current.user.phone_no).call
-    return render json: response
+    render json: response
   end
 
   def create
     token= Token.find_by(token_params, phone_no: Current.user.phone_no)
     if token&.active?
-      return render json: Current.user.tokens
+      render json: Current.user.tokens
     else
       return un_authorized(:invalid_token)
     end
@@ -23,7 +23,7 @@ class Api::V1::AuthenticationsController < ApplicationController
 
     user = User.find_by(refresh_token: decoder.token)
     if user
-      return render json: user.tokens
+      render json: user.tokens
     else
       return un_authorized(:invalid_refresh_token)
     end

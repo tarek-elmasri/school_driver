@@ -8,13 +8,13 @@ class Api::V1::SchoolsController < ApplicationController
   end
 
   def create
-    return un_authorized(:unauthorized) unless authorized_request_for(:create_school)
+    return un_authorized unless authorized_request_for(:create_school)
 
     school= School.new(school_params)
     if school.save 
         render json: school
     else
-        render json: {errors: school.errors},status: 422
+        return invalid_params(school.errors)
     end
   end
 

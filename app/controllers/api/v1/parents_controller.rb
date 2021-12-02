@@ -1,26 +1,26 @@
 class Api::V1::ParentsController < ApplicationController
 
   before_action :authenticate_user
+  before_action :set_parent , only: [:update, :destroy]
 
   def update
-    parent = Parent.find_by(id: params[:id])
-    return un_authorized(:un_authorized) unless parent && authorized_request_for(:update_parent , parent)
+    return un_authorized unless authorized_request_for(:update_parent , @parent)
 
-    if parent.update(parent_params)
-      return render json: parent
+    if @parent.update(parent_params)
+      render json: @parent
     else
-      return render json: { errors: parent.errors}
+      return invalid_params(@parent.errors)
     end
 
   end
 
   def destroy
-    parent = Parent.find_by(id: params[:id])
-    return un_authorized(:unauthorized) unless parent && authorized_request_for(:delete_parent , parent)
-    if parent.delete 
-
+    return un_authorized unless authorized_request_for(:delete_parent , @parent)
+    
+    if @parent.delete 
+      render json: @parent
     else
-
+      return invalid_params(@parent.errors)
     end
   end
 
@@ -28,6 +28,11 @@ class Api::V1::ParentsController < ApplicationController
 
   def parent_params
     params.require(:parent).permit(:first_name,:last_name)
+  end
+
+  def set_parent
+    @parent = Parent.find_by(id: params[:id])
+    return invalid_params({parent: [I18n.t(:invalid_parent_id)]}) unless @parent
   end
 
 end
