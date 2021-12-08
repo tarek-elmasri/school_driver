@@ -46,7 +46,6 @@ class User < ApplicationRecord
   def tokens 
     { :tokens => {
       :access_token => self.generate_access_token,
-      :refresh_token => refresh_token
       }
     }
   end 

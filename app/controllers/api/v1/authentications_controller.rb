@@ -11,6 +11,7 @@ class Api::V1::AuthenticationsController < ApplicationController
   def create
     token= Token.find_by(token_params, phone_no: Current.user.phone_no)
     if token&.active?
+      session[:refresh_token] = Current.user.refresh_token
       render json: Current.user.tokens
     else
       return un_authorized(:invalid_token)
@@ -18,7 +19,7 @@ class Api::V1::AuthenticationsController < ApplicationController
   end
 
   def refresh
-    decoder = JWT_Handler::Decoder.new(refresh_token_params[:refresh_token])
+    decoder = JWT_Handler::Decoder.new(session[:refresh_token])
     return un_authorized(:invalid_refresh_token) unless decoder.valid?(:type => :REFRESH_TOKEN)
 
     user = User.find_by(refresh_token: decoder.token)
@@ -36,10 +37,6 @@ class Api::V1::AuthenticationsController < ApplicationController
 
   def token_params
     params.require(:token).permit(:code,:otp)
-  end
-
-  def refresh_token_params
-    params.permit(:refresh_token)
   end
 
   def validate_credentials

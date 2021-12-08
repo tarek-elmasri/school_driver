@@ -16,6 +16,7 @@ class Api::V1::UsersController < ApplicationController
         token= Token.find_by(token_params, phone_no: @user.phone_no)
         if token&.active?
           @user.save
+          session[:refresh_token] = @user.refresh_token
           render json: @user.tokens
         else
           return un_authorized(:invalid_token)

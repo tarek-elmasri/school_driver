@@ -6,11 +6,21 @@
 # Read more: https://github.com/cyu/rack-cors
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
-  allow do
-    origins '*'
+  if Rails.env == "development"
+    allow do
+      origins 'http://localhost:3000'
 
-    resource '*',
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+      resource '*',
+        headers: :any,
+        methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
+    end
+  elsif Rails.env == "production" 
+    allow do
+      origins 'mywebsite domain'
+
+      resource '*',
+        headers: :any, # TODO: add spescific headers
+        methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
+    end
   end
 end
