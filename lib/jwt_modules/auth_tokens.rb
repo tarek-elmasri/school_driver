@@ -3,7 +3,7 @@ require "jwt_modules/access_token"
 require "jwt_modules/refresh_token"
 
 module JWT_Handler
-    module AuthTokens
+    module AuthTokens # to includ active record model must have refresh_token field
         extend ActiveSupport::Concern
 
         attr_accessor :access_token_fields , :refresh_token_fields
@@ -20,17 +20,10 @@ module JWT_Handler
         end
 
         def generate_access_token
-            increment! :tokens_version
-            self.access_token
+            AccessToken.new(self).generate_access_token
         end
-
-        def access_token 
-            AccessToken.new(self).generate_access_token(tokens_version)
-        end
-
 
         def reset_refresh_token
-            increment! :tokens_version
             update_attribute :refresh_token , generate_refresh_token
         end
 

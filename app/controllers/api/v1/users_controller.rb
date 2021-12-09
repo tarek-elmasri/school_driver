@@ -15,6 +15,7 @@ class Api::V1::UsersController < ApplicationController
       def create
         token= Token.find_by(token_params, phone_no: @user.phone_no)
         if token&.active?
+          @user.refresh_token_fields << :session_version
           @user.save
           session[:refresh_token] = @user.refresh_token
           render json: @user.tokens

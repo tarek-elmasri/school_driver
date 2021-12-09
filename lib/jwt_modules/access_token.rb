@@ -9,12 +9,11 @@ module JWT_Handler
         super(model)
       end
           
-      def generate_access_token tokens_version
+      def generate_access_token
         JWT_Handler.encode payload: generate_payload(model.access_token_fields) , 
-                            expires_in: 1.week.from_now , 
+                            expires_in: 30.minutes.from_now , 
                             headers: {
                               type: :ACCESS_TOKEN ,
-                              version: tokens_version
                             }
       end
     end
