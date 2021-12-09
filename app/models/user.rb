@@ -4,6 +4,9 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  has_refresh_token_fields :id, :session_version
+  has_access_token_fields :id
+
   has_one :parent
   has_one :driver
 

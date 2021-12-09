@@ -16,9 +16,6 @@ module JWT_Handler
     end
 
     def valid? custom_options = nil
-      # data = JWT_Handler.decode token
-      # self.payload = data.first.symbolize_keys
-      # self.headers = data.last.symbolize_keys
       return false if payload.blank? || headers.blank?
 
       if custom_options.present?
@@ -31,9 +28,6 @@ module JWT_Handler
         return false unless current_options[:type] == headers[:type].to_sym
       end
 
-      if current_options[:version].present?
-        return false unless current_options[:version] == headers[:version].to_i
-      end
 
       true
       rescue

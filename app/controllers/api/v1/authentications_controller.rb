@@ -14,7 +14,6 @@ class Api::V1::AuthenticationsController < ApplicationController
       check_current_session_version
 
       session[:refresh_token] = Current.user.refresh_token
-      puts "session token : " ,session[:refresh_token]
       render json: Current.user.tokens
     else
       return un_authorized(:invalid_token)
@@ -50,7 +49,6 @@ class Api::V1::AuthenticationsController < ApplicationController
   def check_current_session_version
     decoder = JWT_Handler::Decoder.new(Current.user.refresh_token)
     unless decoder.payload[:session_version] == Current.user.session_version
-      Current.user.refresh_token_fields << :session_version
       Current.user.reset_refresh_token
     end
   end

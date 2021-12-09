@@ -1,8 +1,13 @@
 class ApplicationController < ActionController::API
+    include ::ActionController::Cookies
+    require "jwt_modules/decoder"
+    before_action :set_request
+
     protected
     def set_request 
         Current.request = request 
         access_token = request.headers[:Authorization]
+                        &.split("Bearer ")
                         &.last
         Current.token = JWT_Handler::Decoder.new access_token, {:type => :ACCESS_TOKEN}
     end
