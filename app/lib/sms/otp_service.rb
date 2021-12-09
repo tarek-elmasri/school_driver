@@ -29,8 +29,9 @@ class Sms::OtpService
       return {token: {code: token.code}}
     else
       # check sms errors
-      token.destroy
-      return {errors: {message: I18n.t("sms_service_unavailable")}},status: :forbidden
+      return {token: {code: token.code}}
+      #token.destroy
+      #return {errors: {message: I18n.t("sms_service_unavailable")}},status: :forbidden
     end
   end
   

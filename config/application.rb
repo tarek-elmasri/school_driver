@@ -21,6 +21,7 @@ Bundler.require(*Rails.groups)
 
 module SchoolDriver
   class Application < Rails::Application
+    
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 
@@ -39,6 +40,13 @@ module SchoolDriver
 
     # Autoload path
     #config.autoload_paths += %W(#{config.root}/lib)
+
+    # setting cookie store
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore , key: "mysession" , http_only:true, secure: Rails.env == "production"
+    config.middleware.insert_after ActionDispatch::Cookies, ActionDispatch::Session::CookieStore , key: "mysession"
+  
+
 
     #using defualt uuid instead of bigint
     config.generators do |g|
