@@ -7,7 +7,7 @@ class User < ApplicationRecord
   has_one :parent
   has_one :driver
 
-  attr_reader :type
+  attr_reader :type, :session_version
 
   accepts_nested_attributes_for :parent
   accepts_nested_attributes_for :driver
@@ -33,6 +33,10 @@ class User < ApplicationRecord
 
   def type 
     (is_parent?) ? :parent : :driver
+  end
+
+  def session_version
+    ENV['SESSION_VERSION']
   end
 
   def is_parent?
