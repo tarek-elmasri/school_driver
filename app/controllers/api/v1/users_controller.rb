@@ -6,6 +6,7 @@ class Api::V1::UsersController < ApplicationController
         render json: Current.user, include: ['parent.children', 'parent.children.school']
       end
 
+      # TODO : merge new and create path and differentiate action with steps
       def new
         response = Sms::OtpService.new(@user.phone_no).call
         render json: response

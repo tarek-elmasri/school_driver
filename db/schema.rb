@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_01_120507) do
+ActiveRecord::Schema.define(version: 2021_12_09_205351) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -26,8 +26,25 @@ ActiveRecord::Schema.define(version: 2021_12_01_120507) do
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "drive_request_id"
+    t.index ["drive_request_id"], name: "index_children_on_drive_request_id"
     t.index ["parent_id"], name: "index_children_on_parent_id"
     t.index ["school_id"], name: "index_children_on_school_id"
+  end
+
+  create_table "drive_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.uuid "parent_id", null: false
+    t.string "status", default: "pending", null: false
+    t.boolean "round_trip", default: false, null: false
+    t.time "pickup_time"
+    t.time "drop_time"
+    t.string "pickup_coords"
+    t.string "drop_coords"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["parent_id"], name: "index_drive_requests_on_parent_id"
+    t.index ["school_id"], name: "index_drive_requests_on_school_id"
   end
 
   create_table "drivers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -77,8 +94,11 @@ ActiveRecord::Schema.define(version: 2021_12_01_120507) do
     t.integer "tokens_version", default: 0, null: false
   end
 
+  add_foreign_key "children", "drive_requests"
   add_foreign_key "children", "parents"
   add_foreign_key "children", "schools"
+  add_foreign_key "drive_requests", "parents"
+  add_foreign_key "drive_requests", "schools"
   add_foreign_key "drivers", "users"
   add_foreign_key "parents", "users"
 end

@@ -20,8 +20,8 @@ class ApplicationController < ActionController::API
         end 
     end
 
-    def authorized_request_for authorization_type , requester=nil 
-        Current.user.is_authorized_for? authorization_type, requester
+    def authorized_request_for authorization_type , rightfull_requester=nil 
+        Current.user.is_authorized_for? authorization_type, rightfull_requester
     end
     
     def un_authorized(msg= :un_authorized) 
