@@ -1,14 +1,15 @@
-class Location
+class Locations::Location
 
   attr_accessor :lat, :long
 
-  def initialize location
-    self.lat = location[:lat]
-    self.long = location[:long]
+  def initialize lat,long
+    self.lat = lat
+    self.long = long
   end
 
   def merged_cords
-    "#{lat} #{long}"
+    #return nil if lat.blank? || long.blank?
+    return "#{lat} #{long}"
   end
 
 end

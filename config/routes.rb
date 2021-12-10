@@ -17,6 +17,9 @@ Rails.application.routes.draw do
 
         scope :parents do
           patch '/:id' => "parents#update"
+          scope :requests do
+            post "/" => "drive_requests#create"
+          end
         end
 
         scope :schools do
@@ -26,6 +29,8 @@ Rails.application.routes.draw do
         scope :children do
           post '/' => "children#create"
         end
+
+        
       end
     end
 
