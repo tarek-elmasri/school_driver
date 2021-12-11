@@ -11,8 +11,8 @@ class DriveRequest < ApplicationRecord
   validate :min_children_count, :trip_ways_and_times_presence
 
   after_initialize :set_defaults
-  before_validation :set_children 
-  after_create :link_children_to_request
+  before_validation :set_children , :set_coords
+  after_save :link_children_to_request
 
   attr_accessor :children_involved , :trip_type, :pickup_location , :drop_location
 
@@ -45,15 +45,18 @@ class DriveRequest < ApplicationRecord
   def set_defaults
     self.status ||= "pending"
     self.trip_type ||= "rounded" if is_round_trip?
-    self.pickup_location = Locations::Location.new(self.pickup_coords) if self.pickup_coords.present?
-    self.drop_location = Locations::Location.new(self.drop_location) if self.drop_coords.present?
-    self.pickup_coords ||= self.pickup_location&.to_s
-    self.drop_coords ||= self.drop_location&.to_s
+    self.pickup_location = Locations::Location.new(pickup_coords) if pickup_coords
+    self.drop_location = Locations::Location.new(drop_location) if drop_coords
     self.children_involved ||= children.ids
   end
 
   def link_children_to_request
     self.children.set_drive_request(id)
+  end
+
+  def set_coords
+    self.pickup_coords = pickup_location&.to_s
+    self.drop_coords = drop_location&.to_s
   end
 
   def set_children
