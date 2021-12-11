@@ -3,11 +3,11 @@ class Api::V1::DriveRequestsController < ApplicationController
   before_action :authenticate_user
 
   def create 
-    puts "------------",params[:drive_request][:lat]
     drive_request = DriveRequest.new(drive_request_params)
-    return un_authorized unless authorized_request_for(:create_drive_request , drive_request.parent) 
-    #drive_request.pickup_coords = Locations::Location.new(pickup_location_params).merged_cords
-    #drive_request.drop_coords = Locations::Location.new(drop_location_params).merged_cords
+    drive_request.pickup_location = Locations::Location.new(pickup_location_params)
+    drive_request.drop_location = Locations::Location.new(drop_location_params)
+    
+    return un_authorized unless authorized_request_for(:create_drive_request , drive_request.parent)
     
     if drive_request.valid?
       render json: drive_request
@@ -31,10 +31,16 @@ class Api::V1::DriveRequestsController < ApplicationController
   end
 
   def pickup_location_params
-    params.require(:drive_request).permit(pickup_coords: [:lat,:long])
+    {
+      lat: params.dig(:drive_request , :pickup_coords , :lat),
+      long: params.dig(:drive_request , :pickup_coords , :long)
+    }
   end
   def drop_location_params
-    params.require(:drive_request).permit(drop_coords: [:lat,:long])
+    {
+      lat: params.dig(:drive_request , :drop_coords , :lat),
+      long: params.dig(:drive_request , :drop_coords , :long)
+    }
   end
   
 end

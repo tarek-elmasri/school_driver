@@ -12,10 +12,12 @@ class DriveRequest < ApplicationRecord
   validates :trip_type , inclusion: {in: TRIP_TYPES, message: "eithe pickup drop or rounded"}
   validate :min_children_count, :trip_ways_and_times_presence
 
-  before_validation :set_defaults , :set_children 
+  after_initialize :set_defaults
+  before_validation :set_children 
   after_create :link_children_to_request
 
-  attr_accessor :children_involved , :trip_type
+  attr_accessor :children_involved , :trip_type, :pickup_location , :drop_location
+
 
   def is_round_trip? 
     round_trip
@@ -24,7 +26,6 @@ class DriveRequest < ApplicationRecord
   def is_single_trip? 
     !is_round_trip?
   end
-
 
 
   private
@@ -45,7 +46,13 @@ class DriveRequest < ApplicationRecord
 
   def set_defaults
     self.status ||= "pending"
-    self.trip_type = "rounded" if is_round_trip?
+    self.trip_type ||= "rounded" if is_round_trip?
+    self.pickup_location = Locations::Location.new(pickup_coords) if pickup_coords
+    self.drop_location ||= Locations::Location.new(drop_location) if drop_coords
+    
+    self.pickup_coords ||= pickup_location&.to_s
+    self.drop_coords ||= drop_location&.to_s
+    self.children_involved ||= children.ids
   end
 
   def link_children_to_request
@@ -55,8 +62,8 @@ class DriveRequest < ApplicationRecord
   def set_children
     return unless children_involved
     self.children = Child.where(id: children_involved, parent_id: parent_id, school_id: school_id)
+
     #make sure all children supplied are there and in related parent scope
-    
     errors.add(:children_involved, I18n.t(:invalid_children)) unless children.size == children_involved.length
   end
 
@@ -64,4 +71,5 @@ class DriveRequest < ApplicationRecord
     # at least one child involved in request
     errors.add(:children, I18n.t(:child_required)) if children.size < 1
   end
+
 end

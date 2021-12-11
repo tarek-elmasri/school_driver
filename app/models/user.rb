@@ -64,7 +64,7 @@ class User < ApplicationRecord
 
   def is_authorized_for?(authorization , authorized_requester=nil )
 
-    id == authorized_requester&.user.id || have_authorization?(authorization)
+    id == authorized_requester&.user&.id || have_authorization?(authorization)
 
   end
 
