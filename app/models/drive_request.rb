@@ -6,8 +6,6 @@ class DriveRequest < ApplicationRecord
   STATUS = ["pending", "acomplished" , "canceled" ]
   TRIP_TYPES = ["pickup" , "drop", "rounded" ]
   # TODO : add translation to messages and complete validations.
-  validates :school_id , presence: true
-  validates :parent_id , presence: true
   validates :status, presence:true , inclusion: STATUS
   validates :trip_type , inclusion: {in: TRIP_TYPES, message: "eithe pickup drop or rounded"}
   validate :min_children_count, :trip_ways_and_times_presence
@@ -47,11 +45,10 @@ class DriveRequest < ApplicationRecord
   def set_defaults
     self.status ||= "pending"
     self.trip_type ||= "rounded" if is_round_trip?
-    self.pickup_location = Locations::Location.new(pickup_coords) if pickup_coords
-    self.drop_location ||= Locations::Location.new(drop_location) if drop_coords
-    
-    self.pickup_coords ||= pickup_location&.to_s
-    self.drop_coords ||= drop_location&.to_s
+    self.pickup_location = Locations::Location.new(self.pickup_coords) if self.pickup_coords.present?
+    self.drop_location = Locations::Location.new(self.drop_location) if self.drop_coords.present?
+    self.pickup_coords ||= self.pickup_location&.to_s
+    self.drop_coords ||= self.drop_location&.to_s
     self.children_involved ||= children.ids
   end
 
@@ -60,9 +57,7 @@ class DriveRequest < ApplicationRecord
   end
 
   def set_children
-    return unless children_involved
     self.children = Child.where(id: children_involved, parent_id: parent_id, school_id: school_id)
-
     #make sure all children supplied are there and in related parent scope
     errors.add(:children_involved, I18n.t(:invalid_children)) unless children.size == children_involved.length
   end
