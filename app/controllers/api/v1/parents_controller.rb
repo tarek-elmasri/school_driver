@@ -1,7 +1,7 @@
 class Api::V1::ParentsController < ApplicationController
 
   before_action :authenticate_user
-  before_action :set_parent , only: [:update, :destroy]
+  before_action :set_parent
 
   def update
     return un_authorized unless authorized_request_for(:update_parent , @parent)
@@ -12,16 +12,6 @@ class Api::V1::ParentsController < ApplicationController
       return invalid_params(@parent.errors)
     end
 
-  end
-
-  def destroy
-    return un_authorized unless authorized_request_for(:delete_parent , @parent)
-    
-    if @parent.delete 
-      render json: @parent
-    else
-      return invalid_params(@parent.errors)
-    end
   end
 
   private 

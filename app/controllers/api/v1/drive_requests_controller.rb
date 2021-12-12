@@ -29,18 +29,5 @@ class Api::V1::DriveRequestsController < ApplicationController
       drop_location: [:lat, :long]
     )
   end
-
-  def pickup_location_params
-    {
-      lat: params.dig(:drive_request , :pickup_coords , :lat),
-      long: params.dig(:drive_request , :pickup_coords , :long)
-    }
-  end
-  def drop_location_params
-    {
-      lat: params.dig(:drive_request , :drop_coords , :lat),
-      long: params.dig(:drive_request , :drop_coords , :long)
-    }
-  end
   
 end
