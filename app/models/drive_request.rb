@@ -6,15 +6,16 @@ class DriveRequest < ApplicationRecord
   STATUS = ["pending", "acomplished" , "canceled" ]
   TRIP_TYPES = ["pickup" , "drop", "rounded" ]
   # TODO : add translation to messages and complete validations.
-  validates :status, presence:true , inclusion: STATUS
-  validates :trip_type , inclusion: {in: TRIP_TYPES, message: "eithe pickup drop or rounded"}
-  validate :min_children_count, :trip_ways_and_times_presence
+  validates :status, inclusion: STATUS
+  validates :trip_type , inclusion: {in: TRIP_TYPES, message: "eithe pickup drop or rounded"} , :if => :is_single_trip?
+  validate :children_involved_ids, :min_children_count, :trip_ways_and_times_presence
 
   after_initialize :set_defaults
-  before_validation :set_children , :set_coords
+  before_validation :set_coords
   after_save :link_children_to_request
 
-  attr_accessor :children_involved , :trip_type, :pickup_location , :drop_location
+  attr_accessor :children_involved , :trip_type
+  attr_reader :pickup_location , :drop_location
 
 
   def is_round_trip? 
@@ -25,6 +26,13 @@ class DriveRequest < ApplicationRecord
     !is_round_trip?
   end
 
+  def pickup_location= location
+    @pickup_location = Locations::Location.new location
+  end
+
+  def drop_location= location
+   @drop_location = Locations::Location.new location
+  end
 
   private
   def trip_ways_and_times_presence
@@ -45,8 +53,8 @@ class DriveRequest < ApplicationRecord
   def set_defaults
     self.status ||= "pending"
     self.trip_type ||= "rounded" if is_round_trip?
-    self.pickup_location = Locations::Location.new(pickup_coords) if pickup_coords
-    self.drop_location = Locations::Location.new(drop_location) if drop_coords
+    self.pickup_location ||= Locations::Location.new(pickup_coords) if pickup_coords
+    self.drop_location ||= Locations::Location.new(drop_location) if drop_coords
     self.children_involved ||= children.ids
   end
 
@@ -55,19 +63,19 @@ class DriveRequest < ApplicationRecord
   end
 
   def set_coords
-    self.pickup_coords = pickup_location&.to_s
-    self.drop_coords = drop_location&.to_s
+    self.pickup_coords = pickup_location.to_s if pickup_location
+    self.drop_coords = drop_location.to_s if drop_location
   end
 
-  def set_children
-    self.children = Child.where(id: children_involved, parent_id: parent_id, school_id: school_id)
+  def children_involved_ids
+    return if children_involved.empty?
     #make sure all children supplied are there and in related parent scope
-    errors.add(:children_involved, I18n.t(:invalid_children)) unless children.size == children_involved.length
+    required_children = Child.where(id: children_involved, parent_id: parent_id, school_id: school_id)
+    errors.add(:children_involved, I18n.t(:invalid_children_involved_ids)) unless required_children.size == children_involved.length
   end
 
   def min_children_count
-    # at least one child involved in request
-    errors.add(:children, I18n.t(:child_required)) if children.size < 1
+    errors.add(:children_involved, I18n.t(:involved_children_required)) if children_involved.empty?
   end
 
 end

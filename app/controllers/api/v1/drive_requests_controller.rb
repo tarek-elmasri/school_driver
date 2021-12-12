@@ -4,8 +4,6 @@ class Api::V1::DriveRequestsController < ApplicationController
 
   def create 
     drive_request = DriveRequest.new(drive_request_params)
-    drive_request.pickup_location = Locations::Location.new(pickup_location_params)
-    drive_request.drop_location = Locations::Location.new(drop_location_params)
     
     return un_authorized unless authorized_request_for(:create_drive_request , drive_request.parent)
     
@@ -27,6 +25,8 @@ class Api::V1::DriveRequestsController < ApplicationController
       :pickup_time,
       :drop_time,
       children_involved: [],
+      pickup_location: [:lat , :long],
+      drop_location: [:lat, :long]
     )
   end
 

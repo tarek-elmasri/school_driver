@@ -3,9 +3,13 @@ class Locations::Location
   attr_reader :lat, :long
 
   def initialize(coords={})
+    set_coords coords
+  end
+  
+  def set_coords(coords)
     if coords.kind_of?(String)
       struct_string(coords)
-    else
+    elsif coords.kind_of?(Hash)
       struct_hash(coords)
     end
   end
@@ -30,8 +34,8 @@ class Locations::Location
   attr_writer :lat , :long
 
   def struct_string content
-    self.lat = content.split(" ")[0].to_f
-    self.long = content.split(" ")[1].to_f
+    self.lat = content.split(" ").first.to_f
+    self.long = content.split(" ").last.to_f
   end
 
   def struct_hash content
