@@ -1,7 +1,7 @@
 class DriveRequest < ApplicationRecord
   belongs_to :school
   belongs_to :parent
-  has_many :children
+  has_many :children, dependent: :nullify
 
   STATUS = ["pending", "acomplished" , "canceled" ]
   TRIP_TYPES = ["pickup" , "drop", "rounded" ]

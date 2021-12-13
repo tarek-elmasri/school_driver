@@ -1,6 +1,7 @@
 class Api::V1::DriveRequestsController < ApplicationController
 
   before_action :authenticate_user
+  before_action :set_drive_id, only: [:destroy]
 
   def create 
     drive_request = DriveRequest.new(drive_request_params)
@@ -11,6 +12,16 @@ class Api::V1::DriveRequestsController < ApplicationController
       render json: drive_request
     else
       return invalid_params(drive_request.errors)
+    end
+  end
+
+
+  def destroy
+    return un_authorized unless authorized_request_for(:delete_drive_request , @drive_request.parent)
+    if @drive_request.destroy 
+      render json: @drive_request
+    else
+      return invalid_params(@drive_request.errors)
     end
   end
 
@@ -29,5 +40,9 @@ class Api::V1::DriveRequestsController < ApplicationController
       drop_location: [:lat, :long]
     )
   end
-  
+
+  def set_drive_request
+    @drive_request = DriveRequest.find_by(id: params[:drive_Request_id])
+    return invalid_params({drive_request_id: [:invalid_id]}) unless @drive_request
+  end
 end
