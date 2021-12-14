@@ -1,14 +1,14 @@
 class Api::V1::DriveRequestsController < ApplicationController
 
   before_action :authenticate_user
-  before_action :set_drive_id, only: [:destroy]
+  before_action :set_drive_request, only: [:destroy]
 
   def create 
     drive_request = DriveRequest.new(drive_request_params)
     
     return un_authorized unless authorized_request_for(:create_drive_request , drive_request.parent)
     
-    if drive_request.valid?
+    if drive_request.save
       render json: drive_request
     else
       return invalid_params(drive_request.errors)
@@ -42,7 +42,7 @@ class Api::V1::DriveRequestsController < ApplicationController
   end
 
   def set_drive_request
-    @drive_request = DriveRequest.find_by(id: params[:drive_Request_id])
-    return invalid_params({drive_request_id: [:invalid_id]}) unless @drive_request
+    @drive_request = DriveRequest.find_by(id: params[:id])
+    return invalid_params({id: [:invalid_id]}) unless @drive_request
   end
 end

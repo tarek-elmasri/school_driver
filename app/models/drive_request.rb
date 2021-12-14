@@ -59,7 +59,9 @@ class DriveRequest < ApplicationRecord
   end
 
   def link_children_to_request
-    self.children.set_drive_request(id)
+    Child
+      .where(id: children_involved)
+      .set_drive_request(id)
   end
 
   def set_coords

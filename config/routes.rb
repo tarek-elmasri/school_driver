@@ -19,6 +19,7 @@ Rails.application.routes.draw do
           patch '/:id' => "parents#update"
           scope :requests do
             post "/" => "drive_requests#create"
+            delete "/:id" => "drive_requests#destroy"
           end
         end
 
