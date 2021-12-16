@@ -5,4 +5,9 @@ class Child < ApplicationRecord
 
   scope :set_drive_request, -> (request_id) { update_all({:drive_request_id => request_id})}
 
+
+  def age 
+    # Time.zone.now
+    ((Time.now.utc - dob.to_time) / 1.year.seconds).floor
+  end
 end

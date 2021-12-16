@@ -39,7 +39,7 @@ class Api::V1::ChildrenController < ApplicationController
   private
   def child_params
     params.require(:child).permit(
-      :name, :age,:sex,:school_class,:school_grade,:school_id,:parent_id
+      :name, :dob,:gender,:school_class,:school_grade,:school_id,:parent_id
     )
   end
 

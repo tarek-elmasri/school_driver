@@ -1,5 +1,7 @@
 class ChildSerializer < ActiveModel::Serializer
-  attributes :id, :name, :age, :sex , :school_grade , :school_class
+  attributes :id, :name, :age, :gender , :school_grade , :school_class , :dob
   belongs_to :parent
   belongs_to :school 
+
+
 end

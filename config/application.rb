@@ -47,5 +47,7 @@ module SchoolDriver
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
     end
+
+    config.active_storage.service = :local
   end
 end
