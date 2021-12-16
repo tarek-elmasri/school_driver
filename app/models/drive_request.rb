@@ -8,7 +8,7 @@ class DriveRequest < ApplicationRecord
   # TODO : add translation to messages and complete validations.
   validates :status, inclusion: STATUS
   validates :trip_type , inclusion: {in: TRIP_TYPES, message: "eithe pickup drop or rounded"} , :if => :is_single_trip?
-  validate :children_involved_ids, :min_children_count, :trip_ways_and_times_presence
+  validate :children_involved_ids, :min_children_count, :trip_coords_presence
 
   after_initialize :set_defaults
   before_validation :set_coords
@@ -35,18 +35,14 @@ class DriveRequest < ApplicationRecord
   end
 
   private
-  def trip_ways_and_times_presence
+  def trip_coords_presence
     case is_round_trip?
     when true
       errors.add(:pickup_coords, I18n.t(:pickup_coords_required)) if pickup_coords.blank?
-      errors.add(:pickup_time, I18n.t(:pickup_time_required)) if pickup_time.blank?
       errors.add(:drop_coords, I18n.t(:drop_coords_required)) if drop_coords.blank?
-      errors.add(:drop_time, I18n.t(:drop_time_required)) if drop_time.blank?
     when false
       errors.add(:pickup_coords, I18n.t(:pickup_coords_required)) if pickup_coords.blank? && trip_type == "pickup"
-      errors.add(:pickup_time, I18n.t(:pickup_time_required)) if pickup_time.blank? && trip_type == "pickup"
       errors.add(:drop_coords, I18n.t(:drop_coords_required)) if drop_coords.blank? && trip_type == "drop"
-      errors.add(:drop_time, I18n.t(:drop_time_required)) if drop_time.blank? && trip_type == "drop"
     end
   end
 

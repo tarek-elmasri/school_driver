@@ -5,8 +5,6 @@ class CreateDriveRequests < ActiveRecord::Migration[6.1]
       t.belongs_to :parent, null: false, foreign_key: true, type: :uuid
       t.string :status, null:false , default: "pending"
       t.boolean :round_trip , null: false , default: false
-      t.time :pickup_time 
-      t.time :drop_time 
       t.string :pickup_coords
       t.string :drop_coords
       t.timestamps

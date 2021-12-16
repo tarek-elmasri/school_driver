@@ -1,5 +1,6 @@
 class AddRefreshTokenToUser < ActiveRecord::Migration[6.1]
   def change
-    add_column :users, :refresh_token, :string , null: false
+    add_column :users, :refresh_token, :string
+    add_index :users, :refresh_token , unique:true
   end
 end

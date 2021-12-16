@@ -33,8 +33,6 @@ class Api::V1::DriveRequestsController < ApplicationController
       :school_id,
       :round_trip, # default => false
       :trip_type, # => required only if round_trip is false or absent
-      :pickup_time,
-      :drop_time,
       children_involved: [],
       pickup_location: [:lat , :long],
       drop_location: [:lat, :long]

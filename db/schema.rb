@@ -47,8 +47,8 @@ ActiveRecord::Schema.define(version: 2021_12_16_055958) do
   create_table "children", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "parent_id", null: false
     t.string "name", null: false
-    t.string "age", null: false
-    t.string "sex"
+    t.date "dob", null: false
+    t.string "gender", null: false
     t.string "school_class"
     t.string "school_grade"
     t.uuid "school_id", null: false
@@ -65,8 +65,6 @@ ActiveRecord::Schema.define(version: 2021_12_16_055958) do
     t.uuid "parent_id", null: false
     t.string "status", default: "pending", null: false
     t.boolean "round_trip", default: false, null: false
-    t.time "pickup_time"
-    t.time "drop_time"
     t.string "pickup_coords"
     t.string "drop_coords"
     t.datetime "created_at", precision: 6, null: false
@@ -78,7 +76,7 @@ ActiveRecord::Schema.define(version: 2021_12_16_055958) do
   create_table "drivers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "first_name", null: false
     t.string "last_name", null: false
-    t.datetime "dob", null: false
+    t.date "dob", null: false
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -110,6 +108,7 @@ ActiveRecord::Schema.define(version: 2021_12_16_055958) do
     t.datetime "expires_in"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["phone_no"], name: "index_tokens_on_phone_no", unique: true
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -118,8 +117,10 @@ ActiveRecord::Schema.define(version: 2021_12_16_055958) do
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "refresh_token", null: false
-    t.integer "tokens_version", default: 0, null: false
+    t.string "refresh_token"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["phone_no"], name: "index_users_on_phone_no", unique: true
+    t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
