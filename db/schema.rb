@@ -102,10 +102,10 @@ ActiveRecord::Schema.define(version: 2021_12_16_055958) do
   end
 
   create_table "tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.integer "otp"
-    t.string "code"
-    t.string "phone_no"
-    t.datetime "expires_in"
+    t.integer "otp", null: false
+    t.string "code", null: false
+    t.string "phone_no", null: false
+    t.datetime "expires_in", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["phone_no"], name: "index_tokens_on_phone_no", unique: true

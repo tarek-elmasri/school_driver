@@ -1,10 +1,10 @@
 class CreateOtps < ActiveRecord::Migration[6.1]
   def change
     create_table :tokens , id: :uuid do |t|
-      t.integer :otp
-      t.string :code 
-      t.string :phone_no 
-      t.timestamp :expires_in
+      t.integer :otp , null: false
+      t.string :code ,null:false
+      t.string :phone_no , null:false
+      t.timestamp :expires_in, null:false
 
       t.timestamps
     end
