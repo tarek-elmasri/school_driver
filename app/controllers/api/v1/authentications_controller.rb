@@ -1,22 +1,27 @@
 class Api::V1::AuthenticationsController < ApplicationController
 
-  before_action :validate_credentials , only: [:new,:create]
-
-  def new
-    response = Sms::OtpService.new(Current.user.phone_no).call
-    render json: response
-  end
+  before_action :validate_credentials , only: [:create]
 
   def create
-    token= Token.find_by(token_params, phone_no: Current.user.phone_no)
-    if token&.active?
-      #check if refresh token have same current session version 
-      check_current_session_version
+    if params[:step] == "1"
+      token = Token.generator(@user.phone_no)
+      SendOtpJob.perform_later(@user.phone_no, token.otp)
+      return render json: {token: {code: token.code}}
 
-      session[:refresh_token] = Current.user.refresh_token
-      render json: Current.user.tokens
+    elsif params[:step] == "2"
+      token= Token.find_by(token_params, phone_no: @user.phone_no)
+      if token&.active?
+        #check if refresh token have same current session version 
+        check_current_session_version
+
+        session[:refresh_token] = @user.refresh_token
+        return render json: @user.tokens
+      else
+        return invalid_params(:invalid_token)
+      end
+
     else
-      return un_authorized(:invalid_token)
+      return invalid_params(:step_required)
     end
   end
 
@@ -42,14 +47,14 @@ class Api::V1::AuthenticationsController < ApplicationController
   end
 
   def validate_credentials
-    Current.user = User.auth(user_params)
-    return un_authorized(:invalid_credentials) unless Current.user.present?
+    @user = User.auth(user_params)
+    return un_authorized(:invalid_credentials) unless @user.present?
   end
 
   def check_current_session_version
-    decoder = JWT_Handler::Decoder.new(Current.user.refresh_token)
-    unless decoder.payload[:session_version] == Current.user.session_version
-      Current.user.reset_refresh_token
+    decoder = JWT_Handler::Decoder.new(@user.refresh_token)
+    unless decoder.payload[:session_version] == @user.session_version
+      @user.reset_refresh_token
     end
   end
 end

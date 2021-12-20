@@ -11,32 +11,30 @@ class Sms::OtpService
     'Content-Type' => 'application/json'
   }
 
-  attr_accessor :phone_no
+  attr_accessor :phone_no, :otp
 
-  def initialize(phone_no)
+  def initialize(phone_no, otp)
     self.phone_no = phone_no
+    self.otp= otp
   end
 
   
-  def call 
-    token = Token.where(phone_no: self.phone_no).first_or_initialize
-    return {token: {code: token.code}}  unless token.exceed_intervals?
-    token.regenerate! expires_in: 2.minutes.from_now
-    server_response = send_otp(token.otp)
+  def call
+    server_response = send_otp
     response = JSON.parse(server_response.body)
-    puts response["code"]
-    if response["code"] == "1"
-      return {token: {code: token.code}}
-    else
-      # check sms errors
-      return {token: {code: token.code}}
-      #token.destroy
-      #return {errors: {message: I18n.t("sms_service_unavailable")}},status: :forbidden
-    end
+    
+    # if response["code"] == "1"
+    #   return {token: {code: token.code}}
+    # else
+    #   # check sms errors
+    #   #return {token: {code: token.code}}
+    #   token.destroy
+    #   return {errors: {message: I18n.t("sms_service_unavailable")}},status: :forbidden
+    # end
   end
   
   private
-  def send_otp(otp) 
+  def send_otp
     response = Faraday.post(
       URL ,
       {
@@ -45,7 +43,7 @@ class Sms::OtpService
         numbers: self.phone_no,
         userSender: USER_SENDER,
         msgEncoding: MSG_ENCODING,
-        msg: MSG + otp.to_s
+        msg: MSG + self.otp.to_s
       }.to_json,
       HEADERS
     )

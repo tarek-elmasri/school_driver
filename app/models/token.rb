@@ -6,6 +6,13 @@ class Token < ApplicationRecord
   validates :expires_in , presence: true 
   validates :phone_no , presence:true , uniqueness: true
 
+  def self.generator(phone_no , expires_in= 2.minutes.from_now) 
+    token = where(phone_no: phone_no).first_or_initialize
+    return token  unless token.exceed_intervals?
+    token.regenerate! expires_in: expires_in
+    return token
+  end
+
   def regenerate!(options = {expires_in: 2.minutes.from_now})
     self.otp = rand(1000...9999)
     self.expires_in = options[:expires_in]

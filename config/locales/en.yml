@@ -53,3 +53,4 @@ en:
   invalid_gender_type: "Invalid gender type. eithe 'male' or 'female'"
   dob_required: "Date of birth field is required."
   invalid_dob: "Date of birth is not accepted."
+  step_required: "Step parameter required."
