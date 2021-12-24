@@ -3,7 +3,7 @@ class Api::V1::SchoolsController < ApplicationController
   before_action :authenticate_user
 
   def index
-    schools = School.all 
+    schools = School.search(params)
     render json: schools
   end
 
