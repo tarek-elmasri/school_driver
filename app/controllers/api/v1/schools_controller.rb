@@ -3,7 +3,9 @@ class Api::V1::SchoolsController < ApplicationController
   before_action :authenticate_user
 
   def index
-    schools = School.search(params)
+    search_params = JSON.parse params[:search] unless params[:search].blank?
+
+    schools = School.search(search_params)
     render json: schools
   end
 
