@@ -67,8 +67,11 @@ class DriveRequest < ApplicationRecord
 
   def children_involved_ids
     return if children_involved.empty?
-    #make sure all children supplied are there and in related parent scope
+    #make sure all children supplied are there and in related parent scope and doesn't have current drive request
     required_children = Child.where(id: children_involved, parent_id: parent_id, school_id: school_id)
+    required_children.each do |child|
+      errors.add(:children_involved, I18n.t(:child_has_current_drive_request)) if child.has_drive_request?
+    end
     errors.add(:children_involved, I18n.t(:invalid_children_involved_ids)) unless required_children.size == children_involved.length
   end
 

@@ -15,6 +15,11 @@ class Child < ApplicationRecord
     ((Time.now.utc - dob.to_time) / 1.year.seconds).floor
   end
 
+  def has_drive_request? 
+    return true unless drive_request_id.blank?
+    false
+  end
+
   private
   def age_in_accepted_range
     return unless dob
