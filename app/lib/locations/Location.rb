@@ -2,15 +2,15 @@ class Locations::Location
 
   attr_reader :lat, :long
 
-  def initialize(coords={})
-    set_coords coords
+  def initialize(data={})
+    set_coords data
   end
   
-  def set_coords(coords)
-    if coords.kind_of?(String)
-      struct_string(coords)
-    elsif coords.kind_of?(Hash)
-      struct_hash(coords)
+  def set_coords(data)
+    if data.kind_of?(String)
+      struct_string(data)
+    elsif data.kind_of?(Hash)
+      struct_hash(data)
     end
   end
 

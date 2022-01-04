@@ -48,9 +48,11 @@ class DriveRequest < ApplicationRecord
 
   def set_defaults
     self.status ||= "pending"
+    @pickup_location ||= Locations::Location.new(pickup_coords) if pickup_coords
+    @drop_location ||= Locations::Location.new(drop_coords) if drop_coords
     self.trip_type ||= "rounded" if is_round_trip?
-    self.pickup_location ||= Locations::Location.new(pickup_coords) if pickup_coords
-    self.drop_location ||= Locations::Location.new(drop_location) if drop_coords
+    self.trip_type ||= "pickup" if is_single_trip? && pickup_coords
+    self.trip_type ||= "drop" if is_single_trip? && drop_coords
     self.children_involved ||= children.ids
   end
 
