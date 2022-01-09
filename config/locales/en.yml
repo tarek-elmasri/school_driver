@@ -55,3 +55,4 @@ en:
   invalid_dob: "Date of birth is not accepted."
   step_required: "Step parameter required."
   child_has_current_drive_request: "One of children has ongoing drive request."
+  invalid_trip_type: "trip_type must be on of 'pickup', 'drop' or 'rounded'"

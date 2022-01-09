@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_16_055958) do
+ActiveRecord::Schema.define(version: 2022_01_09_100508) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -69,6 +69,8 @@ ActiveRecord::Schema.define(version: 2021_12_16_055958) do
     t.string "drop_coords"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "pickup_formatted_location"
+    t.string "drop_formatted_location"
     t.index ["parent_id"], name: "index_drive_requests_on_parent_id"
     t.index ["school_id"], name: "index_drive_requests_on_school_id"
   end
