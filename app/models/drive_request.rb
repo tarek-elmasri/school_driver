@@ -7,7 +7,7 @@ class DriveRequest < ApplicationRecord
   TRIP_TYPES = ["pickup" , "drop", "rounded" ]
   # TODO : add translation to messages and complete validations.
   validates :status, inclusion: STATUS
-  validates :trip_type , inclusion: {in: TRIP_TYPES, I18n.t(:invalid_trip_type)} , :if => :is_single_trip?
+  validates :trip_type , inclusion: {in: TRIP_TYPES, message:I18n.t(:invalid_trip_type)} , :if => :is_single_trip?
   validates :pickup_formatted_location, presence: true , :unless => :is_drop_only?
   validates :drop_formatted_location, presence: true , :unless => :is_pickup_only?
   validate :children_involved_ids, :min_children_count, :trip_coords_presence
