@@ -8,7 +8,7 @@ class Api::V1::UsersController < ApplicationController
           'parent.children.school',
           'parent.children.drive_request', 
           'parent.drive_requests.children',
-          'parent.drive_requests.children.school'
+          'parent.drive_requests.school'
         ]
 
       end
