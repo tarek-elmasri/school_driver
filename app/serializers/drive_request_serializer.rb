@@ -1,5 +1,6 @@
 class DriveRequestSerializer < ActiveModel::Serializer 
-  attributes :id, :status , :round_trip , :trip_type, :pickup_location , :drop_location
+  attributes :id, :status , :round_trip , :trip_type, :pickup_location , :drop_location,
+              :pickup_formatted_location, :drop_formatted_location , :created_at
   has_many :children
   belongs_to :parent 
   belongs_to :school
