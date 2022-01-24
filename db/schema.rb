@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_09_100508) do
+ActiveRecord::Schema.define(version: 2022_01_24_174119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -125,6 +125,18 @@ ActiveRecord::Schema.define(version: 2022_01_09_100508) do
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
   end
 
+  create_table "vehicles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "model"
+    t.integer "manufacture_year"
+    t.string "plate_no"
+    t.integer "capacity"
+    t.uuid "driver_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["driver_id"], name: "index_vehicles_on_driver_id"
+    t.index ["plate_no"], name: "index_vehicles_on_plate_no", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "children", "drive_requests"
@@ -134,4 +146,5 @@ ActiveRecord::Schema.define(version: 2022_01_09_100508) do
   add_foreign_key "drive_requests", "schools"
   add_foreign_key "drivers", "users"
   add_foreign_key "parents", "users"
+  add_foreign_key "vehicles", "drivers"
 end
