@@ -43,7 +43,23 @@ class Api::V1::UsersController < ApplicationController
         params.require(:user).permit(
           :email, :phone_no, :password, 
           parent_attributes: [:first_name , :last_name] , 
-          driver_attributes: [:first_name,:last_name,:dob , vehicle_attributes: [:model, :manufacture_year , :plate_no , :capacity ]]
+          driver_attributes: [
+            :first_name,
+            :last_name,
+            :dob , 
+            :licence_card,
+            :id_card,
+            :image,
+            vehicle_attributes: [
+              :model, 
+              :manufacture_year , 
+              :plate_no , 
+              :capacity ,
+              :image,
+              :licence_card,
+              :insurance_card,
+              ]
+            ]
         )
       end
 

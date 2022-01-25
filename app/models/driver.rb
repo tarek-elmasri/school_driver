@@ -14,10 +14,20 @@ class Driver < ApplicationRecord
   validates :last_name, presence: { message: I18n.t(:last_name_required)}
   validates :dob , presence: {message: I18n.t(:dob_required)}
   validate :age_in_accepted_range
-
   #new
   validates :vehicle, presence: true
+  validates :licence_card, attached: true ,
+                            content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+                            size: { less_than: 5.megabytes , message: "size is greater than 5 megabytes"}
 
+  validates :id_card , attached:true ,
+                        content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+                        size: { less_than: 5.megabytes , message: "size is greater than 5 megabytes"}
+
+  validates :image, content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+                      size: { less_than: 5.megabytes , message: "size is greater than 5 megabytes"}
+
+  
   def age 
     return unless dob
     ((Time.now.utc - dob.to_time) / 1.year.seconds).floor
