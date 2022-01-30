@@ -15,12 +15,12 @@ class Driver < ApplicationRecord
   validates :dob , presence: {message: I18n.t(:dob_required)}
   validate :age_in_accepted_range
   #new
-  validates :vehicle, presence: true
-  validates :licence_card, attached: true ,
+  #validates :vehicle, presence: true
+  validates :license_card, 
                             content_type: ['image/png', 'image/jpg', 'image/jpeg'],
                             size: { less_than: 5.megabytes , message: "size is greater than 5 megabytes"}
 
-  validates :id_card , attached:true ,
+  validates :id_card , 
                         content_type: ['image/png', 'image/jpg', 'image/jpeg'],
                         size: { less_than: 5.megabytes , message: "size is greater than 5 megabytes"}
 
@@ -37,6 +37,6 @@ class Driver < ApplicationRecord
   private
   def age_in_accepted_range
     return unless dob
-    errors.add(:age , I18n.t(:invalid_dob)) if age < 18 || age > 70
+    errors.add(:dob , I18n.t(:invalid_dob)) if age < 18 || age > 70
   end
 end
